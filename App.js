@@ -1,20 +1,53 @@
+import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView, Text, View, FlatList,StyleSheet,ScrollView,Image,Dimensions} from 'react-native';
+import NewsCard from './components/NewsCard';
+import news_data from ".//news_data.json";
+import news_banner_data from ".//news_banner_data.json";
 
-export default function App() {
+function App() {
+
+  const renderNews = ({item}) => <NewsCard news={item}/>;
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.container}>
+      
+        <Text style={styles.Text}>News</Text>
+
+        <FlatList
+            ListHeaderComponent={() => (
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {news_banner_data.map(bannerNews => (
+                  <Image 
+                    style={styles.banner_image} 
+                    source={{uri:bannerNews.imageUrl}} />
+            ))}
+          
+              </ScrollView>
+          )}
+            keyExtractor={item => item.u_id.toString()}
+            data={news_data}
+            renderItem={renderNews}
+        />
+    
+    </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
+  banner_image: {
+    height:Dimensions.get('window').height/5,
+    width:Dimensions.get('window').width/2,
+  },
+  Text:{
+    fontSize:40,
+    fontWeight:'bold',
+    textAlign:'center',
+    margin:10,
+  }
 });
+
+export default App;
